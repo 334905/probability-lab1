@@ -1,0 +1,300 @@
+\documentclass{article}
+
+\usepackage{ifluatex}
+\ifluatex
+\usepackage{fontspec}
+\setsansfont{CMU Sans Serif}%{Arial}
+\setmainfont{CMU Serif}%{Times New Roman}
+\setmonofont{CMU Typewriter Text}%{Consolas}
+\defaultfontfeatures{Ligatures={TeX}}
+\else
+\errmessage{Run with LuaLaTeX}
+\fi
+
+\usepackage[english,russian]{babel}
+\usepackage{amssymb,latexsym,amsmath,amscd,mathtools,wasysym}
+\usepackage[shortlabels]{enumitem}
+\usepackage[makeroom]{cancel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{verbatim}
+\usepackage{fvextra}
+
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{tabu}
+\usepackage{arydshln} % \hdashline and :
+
+\usepackage{float}
+\makeatletter
+\g@addto@macro\@floatboxreset\centering
+\makeatother
+\usepackage{caption}
+\usepackage{csquotes}
+\usepackage[bb=dsserif]{mathalpha}
+\usepackage[normalem]{ulem}
+
+\usepackage{xcolor}
+
+\DeclareFontFamily{U}{matha}{\hyphenchar\font45}
+\DeclareFontShape{U}{matha}{m}{n}{
+    <5> <6> <7> <8> <9> <10> gen * matha
+    <10.95> matha10 <12> <14.4> <17.28> <20.74> <24.88> matha12
+}{}
+\DeclareSymbolFont{matha}{U}{matha}{m}{n}
+\DeclareFontFamily{U}{mathb}{\hyphenchar\font45}
+\DeclareFontShape{U}{mathb}{m}{n}{
+    <5> <6> <7> <8> <9> <10> gen * mathb
+    <10.95> matha10 <12> <14.4> <17.28> <20.74> <24.88> mathb12
+}{}
+\DeclareSymbolFont{mathb}{U}{mathb}{m}{n}
+
+\DeclareMathSymbol{\tmp}{\mathrel}{mathb}{"15}
+\let\defeq\tmp
+\DeclareMathSymbol{\tmp}{\mathrel}{mathb}{"16}
+\let\eqdef\tmp
+
+\usepackage{hyperref}
+\hypersetup{
+    %hidelinks,
+    colorlinks=true,
+    linkcolor=darkgreen,
+    urlcolor=blue,
+    breaklinks=true,
+}
+
+\usepackage{pgf}
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usepackage{svg}
+\usepackage{tikz,tikz-3dplot}
+\usepackage{tkz-euclide}
+\usetikzlibrary{calc,automata,patterns,angles,quotes,backgrounds,shapes.geometric,trees,positioning,decorations.pathreplacing}
+\pgfkeys{/pgf/plot/gnuplot call={T: && cd TeX && gnuplot}}
+\usepgfplotslibrary{fillbetween,polar}
+\usetikzlibrary{quotes,babel}
+\ifluatex
+\usetikzlibrary{graphs,graphs.standard,graphdrawing}
+\usegdlibrary{layered,trees,circular,force}
+\fi
+\makeatletter
+\newcommand\currentnode{\the\tikz@lastxsaved,\the\tikz@lastysaved}
+\makeatother
+
+\usepackage{adjustbox}
+
+\geometry{margin=1in}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyfoot[L]{}
+\fancyfoot[C]{Иванов Тимофей}
+\fancyfoot[R]{\pagename\ \thepage}
+\fancyhead[R]{\leftmark}
+\fancyhead[L]{Теория вероятности}
+\fancyhead[C]{Лабораторная работа 1}
+\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+
+\makeatletter
+\def\@seccntformat#1{%
+    \expandafter\ifx\csname c@#1\endcsname\c@section\else
+    \csname the#1\endcsname\quad
+    \fi}
+\makeatother
+
+\usepackage{asymptote}
+
+\begin{document}
+    \begin{asydef}
+        settings.render = -1;
+        import three;
+        import graph3;
+    \end{asydef}
+    \section{Задача 1}
+    \paragraph{Условие.}
+    В городе с населением в $n+1$ человек некто узнаёт новость. Он передаёт её первому встречному, тот~--- ещё одному и т.д. На каждом шагу впервые узнавший новость может сообщить её любому из $n$ человек  с одинаковыми вероятностями.\\
+    Найти вероятность того, что в продолжение $r$ единиц времени
+    \begin{enumerate}
+        \item Новость не возвратится к человеку, который узнал её первым.
+        \item Новость не будет никем повторена.
+    \end{enumerate}
+    Решить ту же задачу в предположении, что на каждом шагу новость сообщается группе из $N$ случайно выбранных людей.
+    \paragraph{Решение.}
+    В первом случае задачи решение довольно просто, а для $N\neq1$ решить я её не могу.\\
+    В случае $N=1$ новость в любой момент времени передаёт не более 1 человека (1, если он получил её в прошлый момент времени впервые, 0, если новость пришла к тому, кто её уже знал).
+    \subparagraph{a.}
+    Посчитаем вероятность, что новость вернётся к первому человеку.\\
+    В первый момент времени второй человек узнаёт новость. Потом он с вероятностью $\frac1n$ говорит её первому, на чём всё заканчивается. В противном случае он передаёт новость третьему... $k$-тый человек имеет вероятность $\frac1n$ передать её первому, $\frac{k-2}n$~--- передать её не-первому человеку, который новость уже знает и $\frac{n-k+1}n$~--- передать новость новому ($k+1$-му человеку). Итого вероятность того, что новость вернётся к первому, составляет
+    $$
+    \frac1n+\frac{n-1}n\left(\frac1n+\frac{n-2}n\left(\frac1n+\frac{n-3}n\left(\frac1n+\cdots\frac{n-r+2}n\left(\frac1n\right)\cdots\right)\right)\right)
+    $$
+    Это можно упростить до:
+    $$
+    \frac1n+\frac{n-1}n\frac1n+\frac{(n-1)(n-2)}{n^2}\frac1n+\cdots+\frac{(n-1)(n-2)\cdots(n-r+2)}{n^{r-2}}\frac1n
+    $$
+    Как это просуммировать, правда, я не знаю. Ответом является разность единицы и этой величины.
+    \subparagraph{б.}
+    Не очень понятно, что имеется в виду под <<повторена>>, если новость сообщает только впервые её услышавший. Вероятно, имеется в виду, что никто не услышит новость дважды. Тогда нам подходит ситуация, когда $k$-тый человек передаёт новость любому из $n-k$ не слышавших её, то есть искомая вероятность равна
+    $$
+    \frac{n-1}n\cdot\frac{n-2}n\cdot\cdots\cdot\frac{n-r+1}n
+    $$
+    Как это упростить, я всё ещё понятия не имею.
+    \section{Задача 2.}
+    \paragraph{Условие.}
+    Случайная точка $A$ имеет равномерное распределение в правильном $n$-угольнике. Найти вероятность $P_n$, что точка $A$ находится ближе к границе многоугольника, чем к его диагоналям. Найти числа $C$, $\alpha$, что
+    $$
+    P_n=Cn^\alpha(1+o(1))
+    $$
+    \paragraph{Решение.}
+    \begin{figure}[H]
+        \includesvg[scale=.5]{task2}
+    \end{figure}
+    Пусть $A_1\cdots A_n$~--- искомый многоугольник. Нам нужно посчитать площадь той части, где точки ближе к сторонам, чем к диагоналям. Несложно заметить, что граница, разделяющая точки, которые ближе к одной прямой, чем к другой~--- биссектриса угла между ними. Т.е., если обратить внимание на рисунок выше, точки, которые ближе к $A_2A_3$, чем к $A_1A_3$ находятся <<ниже>> биссектрисы угла $A_1A_3A_2$ (т.е. <<ниже>> прямой $A_3C_{23}$).\\
+    Несложно заметить, что в треугольнике $A_2C_{23}A_3$ находятся точки, которые ближе к $A_2A_3$, чем к \textbf{любой} из диагоналей. И нигде в другом месте такие точки не находятся. То есть всё, что нам остаётся,~--- найти площадь этого треугольника, умножить её на $n$ (потому что около каждой стороны есть такой) и поделить полученное на площадь многоугольника.\\
+    Пусть сторона многоугольника равна $1$. Его площадь тогда равна
+    $$
+    \frac n4\cot\frac\pi n
+    $$
+    Теперь давайте посчитаем площадь треугольника $A_2C_{23}A_3$. Он, как несложно заметить, равнобедренный, а его основание~--- $1$. Если посчитать углы, с площадью можно будет справиться.\\
+    Рассмотрим $\triangle A_1A_2A_3$. Он равнобедренный и в нём $\angle A_1A_2A_3=\frac{\pi(n-2)}n$, а значит $\angle A_2A_3A_1=\angle A_3A_1A_2=\frac\pi n$. Следовательно $\angle C_{23}A_3A_2=\frac{\pi}{2n}$, и аналогично $\angle C_{23}A_2A_3=\frac{\pi}{2n}$. А отсюда $\angle A_2C_{23}C_3=\frac{\pi(n-1)}n$. По формуле площади треугольника через три угла и сторону
+    $$
+    S_{\triangle A_2C_{23}A_3}=\frac{\left(\sin\frac{\pi}{2n}\right)^2}{2\sin\frac{\pi(n-1)}n}
+    $$
+    Итого ответом к задаче является
+    $$
+    \frac{n\frac{\left(\sin\frac{\pi}{2n}\right)^2}{2\sin\frac{\pi(n-1)}n}}{\frac n4\cot\frac\pi n}=\frac{2\left(\sin\frac{\pi}{2n}\right)^2}{\sin\frac{\pi(n-1)}n\cot\frac\pi n}=\frac{1-\cos\frac\pi n}{\sin\left(\pi-\frac\pi n\right)\cot\frac\pi n}=\frac{1-\cos\frac\pi n}{\cos\frac\pi n}=\frac1{\cos\frac\pi n}-1
+    $$
+    Осталось только оценить $P_n$:
+    \[\begin{split}
+        \lim\limits_{x\to\infty}\frac{\frac1{\cos\frac\pi x}-1}{Cx^\alpha}&=1\overset{\hat o}\Leftrightarrow
+        \lim\limits_{x\to\infty}\frac{-\frac{\pi\tan\frac\pi x}{x^2\cos\frac\pi x}}{C\alpha x^{\alpha-1}}=1\Leftrightarrow
+        \lim\limits_{x\to\infty}\frac{-\frac{\pi\tan\frac\pi x}{\cos\frac\pi x}}{C\alpha x^{\alpha+1}}=1\overset{\hat o}\Leftrightarrow\\
+        &\overset{\hat o}\Leftrightarrow
+        \lim\limits_{x\to\infty}\frac{\frac{\pi^2\left(\tan^2\frac\pi x+\frac1{\cos^2\frac\pi x}\right)}{x^2\cos\frac\pi x}}{C\alpha(\alpha+1) x^{\alpha}}=1\Leftrightarrow
+        \lim\limits_{x\to\infty}\frac{\frac{\pi^2\left(\tan^2\frac\pi x+\frac1{\cos^2\frac\pi x}\right)}{\cos\frac\pi x}}{C\alpha(\alpha+1) x^{\alpha+2}}=1\Leftrightarrow\\
+        &\Leftrightarrow
+        \left\{\begin{aligned}
+            &\frac{\pi^2}{C\alpha(\alpha+1)}=1\\&\alpha+2=0
+        \end{aligned}\right.
+        \Leftrightarrow
+        \left\{\begin{aligned}
+            &C=\frac{\pi^2}2\\&\alpha=-2
+        \end{aligned}\right.
+    \end{split}\]
+    Ответ: $P_n=\frac{\pi^2}2n^{-2}(1+o(1))$.
+    \section{Задача 3.}
+    \paragraph{Условие.}
+    Введем события $A_i=\{X=i\}$, $B_i=\{Y=i\}$, $i\geqslant0$. Известно, что для любых $i\geqslant0$ и $j\geqslant0$ события $A_i$ и $B_i$ независимы и
+    $$
+    P(X=i)=e^{-\lambda}\frac{\lambda^i}{i!}\qquad \lambda>0
+    $$
+    $$
+    P(Y=j)=e^{-\mu}\frac{\mu^i}{i!}\qquad \mu>0
+    $$
+    Найти $P(X=i\mid X+Y=j)$.
+    \paragraph{Трактовка условия.}
+    Для начала давайте поймём, что такое $i$ и $j$, исходя из этого условия. На мой взгляд, это неотрицательное \textbf{целое} число т.к.
+    $$
+    \sum\limits_{i=0}^\infty P(X=i)=e^{-\lambda}\underbrace{\sum\limits_{i=0}^\infty \frac{\lambda^i}{i!}}_{\text{Ряд Тейлора }e^{\lambda}}=1
+    $$
+    \paragraph{Решение.}
+    По определению условной вероятности
+    $$
+    P(X=i\mid X+Y=j)=\frac{P(X+Y=j\land X=i)}{P(X+Y=j)}=\frac{P(Y=j-i\land X=i)}{P(X+Y=j)}
+    $$
+    Отсюда сразу видно, что если $j<i$ или $i<0$, то искомая условная вероятность~--- ноль, а если $j<0$, то не определена. Числитель этой дроби понятно какой, а вот знаменатель надо посчитать. Зная, что $i$ и $j$, целые (и неотрицательные), разобьём $\{X+Y=j\}$ на следующие попарно несовместные события:
+    \begin{enumerate}
+        \addtocounter{enumi}{-1}
+        \item $\{X=0\land Y=j\}$.
+        \item $\{X=1\land Y=j-1\}$.
+        \item[...]
+        \item[$j$.] $\{X=j\land Y=0\}$.
+    \end{enumerate}
+    Вероятности их соотвественно равны
+    \begin{enumerate}
+        \addtocounter{enumi}{-1}
+        \item $$e^{-\lambda}\frac{\lambda^0}{0!}e^{-\mu}\frac{\mu^j}{j!}$$
+        \item $$e^{-\lambda}\frac{\lambda^1}{1!}e^{-\mu}\frac{\mu^{j-1}}{(j-1)!}$$
+        \item[...]
+        \item[$j$.] $$e^{-\lambda}\frac{\lambda^j}{j!}e^{-\mu}\frac{\mu^0}{0!}$$
+    \end{enumerate}
+    Поскольку эти события несовместны, а их объединение равно $\{X+Y=j\}$, надо лишь сложить искомые вероятности.
+    $$
+    \sum\limits_{i=0}^je^{-\lambda}\frac{\lambda^i}{i!}e^{-\mu}\frac{\mu^{j-i}}{(j-i)!}=\frac{e^{-\lambda-\mu}}{j!}\sum\limits_{i=0}^j\frac{j!}{i!(j-i)!}\lambda^i\mu^{j-i}=\frac{(\lambda+\mu)^j}{j!\cdot e^{\lambda+\mu}}
+    $$
+    Осталось лись поделить $P(X=i\land Y=j-i)$ на это.\\
+    Ответ: $\displaystyle\binom ji\frac{\lambda^i\mu^{j-i}}{(\lambda+\mu)^j}$.
+    \section{Задача 4.}
+    \paragraph{Условие.}
+    Рассмотрите схемы Бернулли при $n\in\{10,100,1000,10000\}$ и $p\in\{0.001,0.01,0.1,0.25,0.5\}$ и рассчитайте точные вероятности (где это возможно) $P\left(S_n\in\left[\frac n2-\sqrt{npq};\frac n2+\sqrt{npq}\right]\right)$, $S_n$~--- количество успехов в $n$ испытаниях, и приближенную с помощью одной из предельных теорем. Сравните точные и приближенные вероятности.\\
+    Объясните результаты.
+    \paragraph{Решение.}
+    Для начала, это очень просто оценить <<\textit{с помощью одной из предельных теорем}>>. Согласно интегральной теореме Муавра~--- Лапласа,
+    $$
+    P\left(x_1\sqrt{npq}+np\leqslant S_n\leqslant x_2\sqrt{npq}+np\right)\approx\frac1{\sqrt{2\pi}}\int\limits_{x_1}^{x_2}e^{-\frac{t^2}2}~\mathrm dt
+    $$
+    Несложно вывести формулу
+    $$
+    x_1=-1+\frac{(1-2p)\sqrt{npq}}{2p(1-p)}\qquad x_2=1+\frac{(1-2p)\sqrt{npq}}{2p(1-p)}
+    $$
+    \begin{figure}[H]
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            $n$ & $p$ & $x_1$ & $x_2$ & $\frac1{\sqrt{2\pi}}\int\limits_{x_1}^{x_2}e^{-\frac{t^2}2}~\mathrm dt$\\
+            \hline
+            $10$ & $0.001$ & $-1+\frac{499\sqrt{1110}}{333}$ & $1+\frac{499\sqrt{1110}}{333}$ & $5.48\times 10^{-523}$\\
+            \hline
+            $100$ & $0.001$ & $-1+\frac{4990\sqrt{111}}{333}$ & $1+\frac{4990\sqrt{111}}{333}$ & $8.99\times 10^{-5348}$\\
+            \hline
+            $1000$ & $0.001$ & $-1+\frac{4990\sqrt{1110}}{333}$ & $1+\frac{4990\sqrt{1110}}{333}$ & $1.27\times 10^{-53911}$\\
+            \hline
+            $10000$ & $0.001$ & $-1+\frac{49900\sqrt{111}}{333}$ & $1+\frac{49900\sqrt{111}}{333}$ & $2.48\times 10^{-540559}$\\
+            \hline
+            $10$ & $0.01$ & $-1+\frac{49\sqrt{110}}{33}$ & $1+\frac{49\sqrt{110}}{33}$ & $8.29\times 10^{-49}$\\
+            \hline
+            $100$ & $0.01$ & $-1+\frac{490\sqrt{11}}{33}$ & $1+\frac{490\sqrt{11}}{33}$ & $1.13\times 10^{-508}$\\
+            \hline
+            $1000$ & $0.01$ & $-1+\frac{490\sqrt{110}}{33}$ & $1+\frac{490\sqrt{110}}{33}$ & $1.15\times 10^{-5202}$\\
+            \hline
+            $10000$ & $0.01$ & $-1+\frac{4900\sqrt{11}}{33}$ & $1+\frac{4900\sqrt{11}}{33}$ & $3.02\times 10^{-52454}$\\
+            \hline
+            $10$ & $0.1$ & $-1+\frac{4\sqrt{10}}{3}$ & $1+\frac{4\sqrt{10}}{3}$ & $2.59\times 10^{-4}$\\
+            \hline
+            $100$ & $0.1$ & $\frac{37}3$ & $\frac{43}3$ & $1.2\times 10^{-35}$\\
+            \hline
+            $1000$ & $0.1$ & $-1+\frac{40\sqrt{10}}{3}$ & $1+\frac{40\sqrt{10}}{3}$ & $4.38\times 10^{-371}$\\
+            \hline
+            $10000$ & $0.1$ & $\frac{397}3$ & $\frac{403}3$ & $2.36\times 10^{-3806}$\\
+            \hline
+            $10$ & $0.25$ & $-1+\frac{\sqrt{30}}{3}$ & $1+\frac{\sqrt{30}}{3}$ & $8.1\times 10^{-2}$\\
+            \hline
+            $100$ & $0.25$ & $-1+\frac{10\sqrt{3}}{3}$ & $1+\frac{10\sqrt{3}}{3}$ & $3.61\times 10^{-7}$\\
+            \hline
+            $1000$ & $0.25$ & $-1+\frac{10\sqrt{30}}{3}$ & $1+\frac{10\sqrt{30}}{3}$ & $1.96\times 10^{-63}$\\
+            \hline
+            $10000$ & $0.25$ & $-1+\frac{100\sqrt{3}}{3}$ & $1+\frac{100\sqrt{3}}{3}$ & $3.02\times 10^{-702}$\\
+            \hline
+            Сколько угодно & $0.5$ & $-1$ & $1$ & $2.7\times10^{-1}$\\
+            \hline
+        \end{tabular}
+    \end{figure}\noindent
+    Для $n=10$ посчитаем искомые вероятности явно.
+    \begin{figure}[H]
+        \begin{tabular}{|c|c|c|}
+            \hline
+            $p$ & Подходящие исходы & Вероятность\\
+            \hline
+            $0.001$ & $\{5\}$ & $\binom{10}{5}0.001^50.999^5=\frac{63}{250000}\approx 2.5\times 10^{-4}$\\
+            \hline
+            $0.01$ & $\{5\}$ & $\binom{10}{5}0.01^50.99^5=\text{много цифр}\approx 2.4\times 10^{-2}$\\
+            \hline
+            $0.1$ & $\{5\}$ & $\binom{10}{5}0.1^50.9^5=\text{много цифр}\approx 1.5\times 10^{-3}$\\
+            \hline
+            $0.25$ & $\{4;5;6\}$ & $\binom{10}{4}0.25^40.75^6+\binom{10}{5}0.25^50.75^5+\binom{10}{6}0.25^60.75^4=\frac{28917}{131072}\approx 2.2\times 10^{-1}$\\
+            \hline
+            $0.5$ & $\{4;5;6\}$ & $\binom{10}{4}0.5^40.5^6+\binom{10}{5}0.5^50.5^5+\binom{10}{6}0.5^60.5^4=\frac{21}{32}\approx 6.6\times 10^{-1}$\\
+            \hline
+        \end{tabular}
+    \end{figure}\noindent
+    Разумеется, для $n=10$ результаты сходятся с оценкой довольно плохо т.к. она нормально работает только при больших $n$.
+\end{document}
