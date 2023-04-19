@@ -8,7 +8,7 @@
 \setmonofont{CMU Typewriter Text}%{Consolas}
 \defaultfontfeatures{Ligatures={TeX}}
 \else
-\errmessage{Run with LuaLaTeX}
+% \errmessage{Run with LuaLaTeX}
 \fi
 
 \usepackage[english,russian]{babel}
@@ -139,6 +139,717 @@
     \frac{n-1}n\cdot\frac{n-2}n\cdot\cdots\cdot\frac{n-r+1}n
     $$
     Как это упростить, я всё ещё понятия не имею.
+    \begin{comment}
+    \section{Задача 1}
+    \paragraph{Условие.}
+    Пусть $n$ писем случайно раскладываются по $n$ конвертам. Найти вероятность, что в точности $m$ писем попадут в свои конверты. Как данную вероятность можно приближенно посчитать при фиксированном $m$ и достаточно большом $n$?
+    \paragraph{Решение.} Исходя из условия задачи, вероятностное пространство выглядит так: $(S_n;2^{S_n};P)$, где $S_n$~--- множество перестановок $n$ элементов, а $P(A)=\frac{|A|}{n!}$.\\
+    Нам надо посчитать вероятность события, содержащего перестановки с $m$ неподвижными точками. Для этого нужно узнать количество таких перестановок, то есть решить <<\textbf{задачу о встречах}>>. Задача о встречах решается с использованием результата <<\textbf{задачи о беспорядках}>> следующим образом: существует $\binom nm$ способов выбрать $m$ неподвижных точек в перестановке $n$ элементов, после чего остаётся расположить оставшиеся $n-m$ точек так, чтобы они не имели неподвижных точек т.е. образовывали перестановку без неподвижных точек (иными словами, <<\textbf{беспорядок}>>).\\
+    Решим задачу о беспорядках. Пусть $N_{i_1,i_2,\ldots,i_r}$~--- количество таких перестановок $\sigma$, что $\forall j\in[1:r]~\sigma(i_j)=i_j$, то есть со неподвижными точками в $i_1,i_2,\ldots,i_r$ (но, возможно, где-то ещё). Несложно заметить, что $N_{i_1,\ldots,i_r}=(n-m-r)!$ так как $r$ значений перестановки зафиксированы, а остальные можно переставить любым образом. Тогда, применив формулу включений-исключений, получим, что искомое количество беспорядков равно
+    $$
+    \binom{n-m}0(n-m-0)!-\binom{n-m}1(n-m-1)!+\binom{n-m}2(n-m-2)!+\cdots+(-1)^n\binom{n-m}{n-m}(n-m-(n-m))!
+    $$
+    Это выражение можно переписать в виде
+    $$
+    \frac{(n-m)!}{0!}-\frac{(n-m)!}{1!}+\frac{(n-m)!}{2!}+\cdots+(-1)^{n-m}\frac{(n-m)!}{(n-m)!}
+    $$
+    Вынеся $(n-m)!$ за скобку, получим
+    $$
+    (n-m)!\sum\limits_{r=0}^{n-m}\frac{(-1)^r}{r!}
+    $$
+    Отсюда искомая вероятность равна
+    $$
+    \frac{\binom nm(n-m)!\sum\limits_{r=0}^{n-m}\frac{(-1)^r}{r!}}{n!}=\frac1{m!}\sum\limits_{r=0}^n\frac{(-1)^r}{r!}
+    $$
+    При фиксированном $m$ и большом $n$ это можно посчитать, заметив, что сумматор в формуле является суммой первых $n$ члена ряда Тейлора $e^x$ при $x=-1$. По формуле Тейлора~--- Маклорена с остатком в форме Лагранжа, имеем
+    $$
+    e^{-1}=\sum\limits_{r=0}^n\frac{1}{r!}(-1)^r+\frac{e^c}{(n+1)!}(-1)^{n+1}
+    $$
+    Где $c\in[-1;0]$. То есть оценка $e^{-1}$ указанной суммой имеет погрешность нем более чем $\frac1{(n+1)!}$. Поскольку эта величина мала при достаточно большом $n$, ей можно пренебречь, считая, что искомая величина равна
+    $$
+    \frac1{em!}
+    $$
+    \end{comment}
+    \begin{comment}
+    \section{Задача 2.}
+    \paragraph{Условие.}
+    Три товарища договорились о встрече между 10 и 11 часами утра, причем условились
+    ждать друг друга не более 10 минут. Считая, что они приходят в случайные моменты времени, найти вероятность того, что хотя бы двое встретятся.
+    \paragraph{Решение.}
+    Введём следующее вероятностное пространство: $(I^3;\mathfrak{A}_{I^3};\mu_3)$, где $I^3$~--- единичный куб, $\mathfrak{A}_{I^3}$~--- $\sigma$-алгебра измеримых по Лебегу подмножеств $I^3$, $\mu_3$~--- мера Лебега. Нам надо в этом кубе найти вероятность множества точек, у которых хотя бы две координаты отличаются не сильнее, чем на $\frac16$.\\
+    Давайте для примера рассмотрим, как выглядит в $I^3$ фигура, в которой абсцисса и ордината отличаются не более чем на $\frac16$. Поскольку это условие никак не ограничивает апликату, достаточно рассмотреть множество $\{(x;y)\in I^2\mid |x-y|\leqslant\frac16\}$, потому что его последующее перенесение в трёхмерное пространство представляется тривиальным.\\
+    Позволю себе просто нарисовать данное множество без пояснений (слева) и указать его площадь $\frac{11}{36}$:
+    \begin{figure}[H]
+        \begin{tikzpicture}[scale=4]
+            \draw (0, 0) -- (0, 1) -- (1, 1) -- (1, 0) -- cycle;
+            \fill[blue] (0, 0) -- (1/6, 0) -- (1, 5/6) -- (1, 1) -- (5/6, 1) -- (0, 1/6) -- cycle;
+        \end{tikzpicture}
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(1.5, 1.6, 1.8, up=Z);
+            draw(unitbox, black);
+
+            path3 XZpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 0, 5/6) -- (1, 0, 1) -- (5/6, 0, 1) -- (0, 0, 1/6) -- cycle;
+            surface XZsurf = surface(XZpath);
+
+            draw(extrude(XZpath, Y), blue+opacity(0.5));
+            draw(XZsurf, blue+opacity(0.5));
+            draw(shift(0, 1, 0) * XZsurf, blue+opacity(0.5));
+
+            axes3(min=(0, 0, 0), max=(2, 2, 2), p=purple);
+        \end{asy}
+    \end{figure}\noindent
+    Справа же нарисована трёхмерная фигура с тем же свойством: $\{(x;y;z)\in I^3\mid |x-y|\leqslant\frac16\}$. В задаче же требуется найти площадь объединения такой фигуры с двумя аналогичными ей:
+    \begin{figure}[H]
+        \begin{asy}
+            size(4cm);
+            currentprojection = perspective(1.5, 1.6, 1.8, up=Z);
+            draw(unitbox, black);
+
+            path3 XZpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 0, 5/6) -- (1, 0, 1) -- (5/6, 0, 1) -- (0, 0, 1/6) -- cycle;
+            surface XZsurf = surface(XZpath);
+
+            draw(extrude(XZpath, Y), blue+opacity(0.5));
+            draw(XZsurf, blue+opacity(0.5));
+            draw(shift(0, 1, 0) * XZsurf, blue+opacity(0.5));
+        \end{asy}
+        \begin{asy}
+            size(4cm);
+            currentprojection = perspective(1.5, 1.6, 1.8, up=Z);
+            draw(unitbox, black);
+
+            path3 XYpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 5/6, 0) -- (1, 1, 0) -- (5/6, 1, 0) -- (0, 1/6, 0) -- cycle;
+            surface XYsurf = surface(XYpath);
+
+            draw(extrude(XYpath, Z), green+opacity(0.5));
+            draw(XYsurf, green+opacity(0.5));
+            draw(shift(0, 0, 1) * XYsurf, green+opacity(0.5));
+        \end{asy}
+        \begin{asy}
+            size(4cm);
+            currentprojection = perspective(1.5, 1.6, 1.8, up=Z);
+            draw(unitbox, black);
+
+            path3 YZpath = (0, 0, 0) -- (0, 1/6, 0) -- (0, 1, 5/6) -- (0, 1, 1) -- (0, 5/6, 1) -- (0, 0, 1/6) -- cycle;
+            surface YZsurf = surface(YZpath);
+
+            draw(extrude(YZpath, X), red+opacity(0.5));
+            draw(YZsurf, red+opacity(0.5));
+            draw(shift(1, 0, 0) * YZsurf, red+opacity(0.5));
+        \end{asy}
+    \end{figure}\noindent
+    Изображение всех трех множеств на одной картинке представлено дольше в двух экземплярах. Левое~--- со стороны точки $(1;1;1)$, правое~--- со стороны одной из граней.
+    \begin{figure}[H]
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(1.5, 1.6, 1.8, up=Z);
+            draw(unitbox, black);
+            
+            path3 XZpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 0, 5/6) -- (1, 0, 1) -- (5/6, 0, 1) -- (0, 0, 1/6) -- cycle;
+            path3 XYpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 5/6, 0) -- (1, 1, 0) -- (5/6, 1, 0) -- (0, 1/6, 0) -- cycle;
+            path3 YZpath = (0, 0, 0) -- (0, 1/6, 0) -- (0, 1, 5/6) -- (0, 1, 1) -- (0, 5/6, 1) -- (0, 0, 1/6) -- cycle;
+            surface XZsurf = surface(XZpath);
+            surface XYsurf = surface(XYpath);
+            surface YZsurf = surface(YZpath);
+            
+            draw(extrude(XZpath, Y), blue+opacity(.1));
+            draw(XZsurf, blue+opacity(.1));
+            draw(shift(0, 1, 0) * XZsurf, blue+opacity(.1));
+            draw(extrude(XYpath, Z), green+opacity(.1));
+            draw(XYsurf, green+opacity(.1));
+            draw(shift(0, 0, 1) * XYsurf, green+opacity(.1));
+            draw(extrude(YZpath, X), red+opacity(.1));
+            draw(YZsurf, red+opacity(.1));
+            draw(shift(1, 0, 0) * YZsurf, red+opacity(.1));
+        \end{asy}
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(-1, .5, .5, up=Z);
+            draw(unitbox, black);
+        
+            path3 XZpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 0, 5/6) -- (1, 0, 1) -- (5/6, 0, 1) -- (0, 0, 1/6) -- cycle;
+            path3 XYpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 5/6, 0) -- (1, 1, 0) -- (5/6, 1, 0) -- (0, 1/6, 0) -- cycle;
+            path3 YZpath = (0, 0, 0) -- (0, 1/6, 0) -- (0, 1, 5/6) -- (0, 1, 1) -- (0, 5/6, 1) -- (0, 0, 1/6) -- cycle;
+            surface XZsurf = surface(XZpath);
+            surface XYsurf = surface(XYpath);
+            surface YZsurf = surface(YZpath);
+        
+            draw(extrude(XZpath, Y), blue+opacity(.1));
+            draw(XZsurf, blue+opacity(.1));
+            draw(shift(0, 1, 0) * XZsurf, blue+opacity(.1));
+            draw(extrude(XYpath, Z), green+opacity(.1));
+            draw(XYsurf, green+opacity(.1));
+            draw(shift(0, 0, 1) * XYsurf, green+opacity(.1));
+            draw(extrude(YZpath, X), red+opacity(.1));
+            draw(YZsurf, red+opacity(.1));
+            draw(shift(1, 0, 0) * YZsurf, red+opacity(.1));
+        \end{asy}
+    \end{figure}\noindent
+    Чтобы посчитать объём объединения этих фигур, можно применить формулу включения-исключения. Для этого придётся посчитать объём каждой из фигур, объём попарных пересечений и объём пересечения всех трёх фигур.
+    \subparagraph{Объём одной фигуры.}
+    Поскольку каждая такая фигура является призмой с основанием (на стороне куба) с площадью $\frac{11}{36}$, объём каждой фигуры равен $\frac{11}{36}$.
+    \subparagraph{Объём пересечения двух фигур.} 
+    В силу симметрии, все объёмы попарных пересечений равны, а значит можно посчитать объём только одного из попарных пересечений. Например, посчитаем объём пересечения зелёной и красной фигур:
+    \begin{figure}[H]
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(1.5, 1.9, 1.5, up=Z);
+            draw(unitbox, black);
+
+            //path3 XZpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 0, 5/6) -- (1, 0, 1) -- (5/6, 0, 1) -- (0, 0, 1/6) -- cycle;
+            path3 XYpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 5/6, 0) -- (1, 1, 0) -- (5/6, 1, 0) -- (0, 1/6, 0) -- cycle;
+            path3 YZpath = (0, 0, 0) -- (0, 1/6, 0) -- (0, 1, 5/6) -- (0, 1, 1) -- (0, 5/6, 1) -- (0, 0, 1/6) -- cycle;
+            //surface XZsurf = surface(XZpath);
+            surface XYsurf = surface(XYpath);
+            surface YZsurf = surface(YZpath);
+
+            //draw(extrude(XZpath, Y), blue+opacity(.1));
+            //draw(XZsurf, blue+opacity(.1));
+            //draw(shift(0, 1, 0) * XZsurf, blue+opacity(.1));
+            draw(extrude(XYpath, Z), green+opacity(.1));
+            draw(XYsurf, green+opacity(.1));
+            draw(shift(0, 0, 1) * XYsurf, green+opacity(.1));
+            draw(extrude(YZpath, X), red+opacity(.1));
+            draw(YZsurf, red+opacity(.1));
+            draw(shift(1, 0, 0) * YZsurf, red+opacity(.1));
+
+            triple v111 = (1, 1, 1);
+            triple v011 = (5/6, 1, 1);
+            triple v101 = (1, 5/6, 1);
+            triple v110 = (1, 1, 5/6);
+            triple v100 = (1, 5/6, 4/6);
+            triple v010 = (5/6, 1, 5/6);
+            triple v001 = (4/6, 5/6, 1);
+
+            triple u000 = (0, 0, 0);
+            triple u100 = (1/6, 0, 0);
+            triple u010 = (0, 1/6, 0);
+            triple u001 = (0, 0, 1/6);
+            triple u011 = (0, 1/6, 2/6);
+            triple u101 = (1/6, 0, 1/6);
+            triple u110 = (2/6, 1/6, 0);
+
+            draw(surface(v101 -- v111 -- v011 -- v001 -- cycle), yellow+opacity(.5));
+            draw(surface(v110 -- v111 -- v011 -- v010 -- cycle), yellow+opacity(.5));
+            draw(surface(v101 -- v111 -- v110 -- v100 -- cycle), yellow+opacity(.5));
+
+            draw(surface(v101 -- v001 -- u011 -- u001 -- u101 -- cycle), yellow+opacity(.5));
+            draw(surface(v101 -- u101 -- u100 -- u110 -- v100 -- cycle), yellow+opacity(.5));
+            draw(surface(v010 -- v110 -- v100 -- u110 -- u010 -- cycle), yellow+opacity(.5));
+            draw(surface(v010 -- v011 -- v001 -- u011 -- u010 -- cycle), yellow+opacity(.5));
+
+            draw(surface(u010 -- u000 -- u100 -- u110 -- cycle), yellow+opacity(.5));
+            draw(surface(u001 -- u000 -- u100 -- u101 -- cycle), yellow+opacity(.5));
+            draw(surface(u010 -- u000 -- u001 -- u011 -- cycle), yellow+opacity(.5));
+        \end{asy}
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(2, 0.5, .5, up=Z);
+            draw(unitbox, black);
+
+            //path3 XZpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 0, 5/6) -- (1, 0, 1) -- (5/6, 0, 1) -- (0, 0, 1/6) -- cycle;
+            path3 XYpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 5/6, 0) -- (1, 1, 0) -- (5/6, 1, 0) -- (0, 1/6, 0) -- cycle;
+            path3 YZpath = (0, 0, 0) -- (0, 1/6, 0) -- (0, 1, 5/6) -- (0, 1, 1) -- (0, 5/6, 1) -- (0, 0, 1/6) -- cycle;
+            //surface XZsurf = surface(XZpath);
+            surface XYsurf = surface(XYpath);
+            surface YZsurf = surface(YZpath);
+
+            //draw(extrude(XZpath, Y), blue+opacity(.1));
+            //draw(XZsurf, blue+opacity(.1));
+            //draw(shift(0, 1, 0) * XZsurf, blue+opacity(.1));
+            draw(extrude(XYpath, Z), green+opacity(.1));
+            draw(XYsurf, green+opacity(.1));
+            draw(shift(0, 0, 1) * XYsurf, green+opacity(.1));
+            draw(extrude(YZpath, X), red+opacity(.1));
+            draw(YZsurf, red+opacity(.1));
+            draw(shift(1, 0, 0) * YZsurf, red+opacity(.1));
+
+            triple v111 = (1, 1, 1);
+            triple v011 = (5/6, 1, 1);
+            triple v101 = (1, 5/6, 1);
+            triple v110 = (1, 1, 5/6);
+            triple v100 = (1, 5/6, 4/6);
+            triple v010 = (5/6, 1, 5/6);
+            triple v001 = (4/6, 5/6, 1);
+
+            triple u000 = (0, 0, 0);
+            triple u100 = (1/6, 0, 0);
+            triple u010 = (0, 1/6, 0);
+            triple u001 = (0, 0, 1/6);
+            triple u011 = (0, 1/6, 2/6);
+            triple u101 = (1/6, 0, 1/6);
+            triple u110 = (2/6, 1/6, 0);
+
+            draw(surface(v101 -- v111 -- v011 -- v001 -- cycle), yellow+opacity(.5));
+            draw(surface(v110 -- v111 -- v011 -- v010 -- cycle), yellow+opacity(.5));
+            draw(surface(v101 -- v111 -- v110 -- v100 -- cycle), yellow+opacity(.5));
+
+            draw(surface(v101 -- v001 -- u011 -- u001 -- u101 -- cycle), yellow+opacity(.5));
+            draw(surface(v101 -- u101 -- u100 -- u110 -- v100 -- cycle), yellow+opacity(.5));
+            draw(surface(v010 -- v110 -- v100 -- u110 -- u010 -- cycle), yellow+opacity(.5));
+            draw(surface(v010 -- v011 -- v001 -- u011 -- u010 -- cycle), yellow+opacity(.5));
+
+            draw(surface(u010 -- u000 -- u100 -- u110 -- cycle), yellow+opacity(.5));
+            draw(surface(u001 -- u000 -- u100 -- u101 -- cycle), yellow+opacity(.5));
+            draw(surface(u010 -- u000 -- u001 -- u011 -- cycle), yellow+opacity(.5));
+        \end{asy}
+    \end{figure}\noindent
+    Как можно (а можно не) заметить, эту фигуру можно разделить на две усечённые пирамидки и призму:
+    \begin{figure}[H]
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(2, 0.5, .5, up=Z);
+            draw(unitbox, black);
+
+            triple v111 = (1, 1, 1);
+            triple v011 = (5/6, 1, 1);
+            triple v101 = (1, 5/6, 1);
+            triple v110 = (1, 1, 5/6);
+            triple v100 = (1, 5/6, 4/6);
+            triple v010 = (5/6, 1, 5/6);
+            triple v001 = (4/6, 5/6, 1);
+
+            triple u000 = (0, 0, 0);
+            triple u100 = (1/6, 0, 0);
+            triple u010 = (0, 1/6, 0);
+            triple u001 = (0, 0, 1/6);
+            triple u011 = (0, 1/6, 2/6);
+            triple u101 = (1/6, 0, 1/6);
+            triple u110 = (2/6, 1/6, 0);
+
+            triple u101a = (2/6, 1/6, 2/6);
+            triple v010a = (4/6, 5/6, 4/6);
+
+            draw(surface(v101 -- v111 -- v011 -- v001 -- cycle), yellow);
+            draw(surface(v110 -- v111 -- v011 -- v010 -- cycle), yellow);
+            draw(surface(v101 -- v111 -- v110 -- v100 -- cycle), yellow);
+
+            draw(surface(u101a -- u011 -- u001 -- u101 -- cycle), yellow);
+            draw(surface(u101a -- u101 -- u100 -- u110 -- cycle), yellow);
+
+            draw(surface(v010 -- v110 -- v100 -- v010a -- cycle), yellow);
+            draw(surface(v010 -- v011 -- v001 -- v010a -- cycle), yellow);
+
+            draw(surface(u010 -- u000 -- u100 -- u110 -- cycle), yellow);
+            draw(surface(u001 -- u000 -- u100 -- u101 -- cycle), yellow);
+            draw(surface(u010 -- u000 -- u001 -- u011 -- cycle), yellow);
+        \end{asy}
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(2, 0.5, .5, up=Z);
+            draw(unitbox, black);
+
+            triple v111 = (1, 1, 1);
+            triple v011 = (5/6, 1, 1);
+            triple v101 = (1, 5/6, 1);
+            triple v110 = (1, 1, 5/6);
+            triple v100 = (1, 5/6, 4/6);
+            triple v010 = (5/6, 1, 5/6);
+            triple v001 = (4/6, 5/6, 1);
+
+            triple u000 = (0, 0, 0);
+            triple u100 = (1/6, 0, 0);
+            triple u010 = (0, 1/6, 0);
+            triple u001 = (0, 0, 1/6);
+            triple u011 = (0, 1/6, 2/6);
+            triple u101 = (1/6, 0, 1/6);
+            triple u110 = (2/6, 1/6, 0);
+
+            triple u101a = (2/6, 1/6, 2/6);
+            triple v010a = (4/6, 5/6, 4/6);
+
+            draw(surface(v101 -- v001 -- u011 -- u101a -- cycle), yellow+opacity(.5));
+            draw(surface(v101 -- u101a -- u110 -- v100 -- cycle), yellow+opacity(.5));
+            draw(surface(v010a -- v100 -- u110 -- u010 -- cycle), yellow+opacity(.5));
+            draw(surface(v010a -- v001 -- u011 -- u010 -- cycle), yellow+opacity(.5));
+        \end{asy}
+    \end{figure}\noindent
+    Объём призмы равен площади основания на высоту (основание равно $\frac13$, а высота~--- $\frac23$), а чтобы посчитать объём усечённой пирамидки, вычтем из объёма не-усечённой пирамидки то, что усекли (т.е. пирамидку поменьше). Объём пирамиды равен трети площади её основания на высоту, т.е. объём каждой из усечённых пирамид равен $$\frac13\left(\frac13\right)^2\frac13-\frac13\left(\frac16\right)^2\frac16=\frac7{648}$$
+    Итого $\frac{31}{324}$.
+    \paragraph{Площадь пересечения всех трёх фигур.}\mbox{}
+    \begin{figure}[H]
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(1.5, 1.9, 1.5, up=Z);
+            draw(unitbox, black);
+        
+            path3 XZpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 0, 5/6) -- (1, 0, 1) -- (5/6, 0, 1) -- (0, 0, 1/6) -- cycle;
+            path3 XYpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 5/6, 0) -- (1, 1, 0) -- (5/6, 1, 0) -- (0, 1/6, 0) -- cycle;
+            path3 YZpath = (0, 0, 0) -- (0, 1/6, 0) -- (0, 1, 5/6) -- (0, 1, 1) -- (0, 5/6, 1) -- (0, 0, 1/6) -- cycle;
+            surface XZsurf = surface(XZpath);
+            surface XYsurf = surface(XYpath);
+            surface YZsurf = surface(YZpath);
+        
+            draw(extrude(XZpath, Y), blue+opacity(.1));
+            draw(XZsurf, blue+opacity(.1));
+            draw(shift(0, 1, 0) * XZsurf, blue+opacity(.1));
+            draw(extrude(XYpath, Z), green+opacity(.1));
+            draw(XYsurf, green+opacity(.1));
+            draw(shift(0, 0, 1) * XYsurf, green+opacity(.1));
+            draw(extrude(YZpath, X), red+opacity(.1));
+            draw(YZsurf, red+opacity(.1));
+            draw(shift(1, 0, 0) * YZsurf, red+opacity(.1));
+        
+            triple v111 = (1, 1, 1);
+            triple v011 = (5/6, 1, 1);
+            triple v101 = (1, 5/6, 1);
+            triple v110 = (1, 1, 5/6);
+            triple v100 = (1, 5/6, 5/6);
+            triple v010 = (5/6, 1, 5/6);
+            triple v001 = (5/6, 5/6, 1);
+            
+            triple u000 = (0, 0, 0);
+            triple u100 = (1/6, 0, 0);
+            triple u010 = (0, 1/6, 0);
+            triple u001 = (0, 0, 1/6);
+            triple u011 = (0, 1/6, 1/6);
+            triple u101 = (1/6, 0, 1/6);
+            triple u110 = (1/6, 1/6, 0);
+
+            draw(surface(v110 -- v111 -- v101 -- v100 -- cycle), gray+opacity(.5));
+            draw(surface(v110 -- v111 -- v011 -- v010 -- cycle), gray+opacity(.5));
+            draw(surface(v101 -- v111 -- v011 -- v001 -- cycle), gray+opacity(.5));
+
+            draw(surface(u001 -- u000 -- u010 -- u011 -- cycle), gray+opacity(.5));
+            draw(surface(u001 -- u000 -- u100 -- u101 -- cycle), gray+opacity(.5));
+            draw(surface(u010 -- u000 -- u100 -- u110 -- cycle), gray+opacity(.5));
+
+            draw(surface(u100 -- v100 -- v110 -- u110 -- cycle), gray+opacity(.5));
+            draw(surface(v110 -- u110 -- u010 -- v010 -- cycle), gray+opacity(.5));
+            draw(surface(u010 -- v010 -- v011 -- u011 -- cycle), gray+opacity(.5));
+            draw(surface(v011 -- u011 -- u001 -- v001 -- cycle), gray+opacity(.5));
+            draw(surface(u001 -- v001 -- v101 -- u101 -- cycle), gray+opacity(.5));
+            draw(surface(v101 -- u101 -- u100 -- v100 -- cycle), gray+opacity(.5));
+        \end{asy}
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(2, 0.5, .5, up=Z);
+            draw(unitbox, black);
+
+            path3 XZpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 0, 5/6) -- (1, 0, 1) -- (5/6, 0, 1) -- (0, 0, 1/6) -- cycle;
+            path3 XYpath = (0, 0, 0) -- (1/6, 0, 0) -- (1, 5/6, 0) -- (1, 1, 0) -- (5/6, 1, 0) -- (0, 1/6, 0) -- cycle;
+            path3 YZpath = (0, 0, 0) -- (0, 1/6, 0) -- (0, 1, 5/6) -- (0, 1, 1) -- (0, 5/6, 1) -- (0, 0, 1/6) -- cycle;
+            surface XZsurf = surface(XZpath);
+            surface XYsurf = surface(XYpath);
+            surface YZsurf = surface(YZpath);
+
+            draw(extrude(XZpath, Y), blue+opacity(.1));
+            draw(XZsurf, blue+opacity(.1));
+            draw(shift(0, 1, 0) * XZsurf, blue+opacity(.1));
+            draw(extrude(XYpath, Z), green+opacity(.1));
+            draw(XYsurf, green+opacity(.1));
+            draw(shift(0, 0, 1) * XYsurf, green+opacity(.1));
+            draw(extrude(YZpath, X), red+opacity(.1));
+            draw(YZsurf, red+opacity(.1));
+            draw(shift(1, 0, 0) * YZsurf, red+opacity(.1));
+
+            triple v111 = (1, 1, 1);
+            triple v011 = (5/6, 1, 1);
+            triple v101 = (1, 5/6, 1);
+            triple v110 = (1, 1, 5/6);
+            triple v100 = (1, 5/6, 5/6);
+            triple v010 = (5/6, 1, 5/6);
+            triple v001 = (5/6, 5/6, 1);
+
+            triple u000 = (0, 0, 0);
+            triple u100 = (1/6, 0, 0);
+            triple u010 = (0, 1/6, 0);
+            triple u001 = (0, 0, 1/6);
+            triple u011 = (0, 1/6, 1/6);
+            triple u101 = (1/6, 0, 1/6);
+            triple u110 = (1/6, 1/6, 0);
+
+            draw(surface(v110 -- v111 -- v101 -- v100 -- cycle), gray+opacity(.5));
+            draw(surface(v110 -- v111 -- v011 -- v010 -- cycle), gray+opacity(.5));
+            draw(surface(v101 -- v111 -- v011 -- v001 -- cycle), gray+opacity(.5));
+
+            draw(surface(u001 -- u000 -- u010 -- u011 -- cycle), gray+opacity(.5));
+            draw(surface(u001 -- u000 -- u100 -- u101 -- cycle), gray+opacity(.5));
+            draw(surface(u010 -- u000 -- u100 -- u110 -- cycle), gray+opacity(.5));
+
+            draw(surface(u100 -- v100 -- v110 -- u110 -- cycle), gray+opacity(.5));
+            draw(surface(v110 -- u110 -- u010 -- v010 -- cycle), gray+opacity(.5));
+            draw(surface(u010 -- v010 -- v011 -- u011 -- cycle), gray+opacity(.5));
+            draw(surface(v011 -- u011 -- u001 -- v001 -- cycle), gray+opacity(.5));
+            draw(surface(u001 -- v001 -- v101 -- u101 -- cycle), gray+opacity(.5));
+            draw(surface(v101 -- u101 -- u100 -- v100 -- cycle), gray+opacity(.5));
+        \end{asy}
+    \end{figure}\noindent
+    Чтобы посчитать объём данной фигуры, таже разделим её на 3 части, две из которых одинаковы:
+    \begin{figure}[H]
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(2, 0.5, .5, up=Z);
+            draw(unitbox, black);
+
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            
+            draw(surface((5/6, 1, 1) -- (1, 5/6, 1) -- (5/6, 5/6, 1) -- cycle), gray+opacity(.5));
+            draw(surface((1, 1, 5/6) -- (1, 5/6, 1) -- (1, 5/6, 5/6) -- cycle), gray+opacity(.5));
+            draw(surface((5/6, 1, 1) -- (1, 1, 5/6) -- (5/6, 1, 5/6) -- cycle), gray+opacity(.5));
+            
+            draw(surface((5/6, 1, 1) -- (14/18, 17/18, 17/18) -- (5/6, 5/6, 1) -- cycle), gray+opacity(.5));
+            draw(surface((5/6, 1, 1) -- (14/18, 17/18, 17/18) -- (5/6, 1, 5/6) -- cycle), gray+opacity(.5));
+            
+            draw(surface((1, 5/6, 1) -- (17/18, 14/18, 17/18) -- (5/6, 5/6, 1) -- cycle), gray+opacity(.5));
+            draw(surface((1, 5/6, 1) -- (17/18, 14/18, 17/18) -- (1, 5/6, 5/6) -- cycle), gray+opacity(.5));
+            
+            draw(surface((1, 1, 5/6) -- (17/18, 17/18, 14/18) -- (1, 5/6, 5/6) -- cycle), gray+opacity(.5));
+            draw(surface((1, 1, 5/6) -- (17/18, 17/18, 14/18) -- (5/6, 1, 5/6) -- cycle), gray+opacity(.5));
+            
+            draw(surface((17/18, 17/18, 14/18) -- (1, 5/6, 5/6) -- (17/18, 14/18, 17/18) -- (5/6, 5/6, 1) -- (14/18, 17/18, 17/18) -- (5/6, 1, 5/6) -- cycle), gray+opacity(.5));
+            draw(surface((5/6, 1, 1) -- (1, 5/6, 1) -- (1, 1, 1) -- cycle), gray+opacity(.5));
+            draw(surface((5/6, 1, 1) -- (1, 1, 5/6) -- (1, 1, 1) -- cycle), gray+opacity(.5));
+            draw(surface((1, 1, 5/6) -- (1, 5/6, 1) -- (1, 1, 1) -- cycle), gray+opacity(.5));
+        \end{asy}
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(2, 0.5, .5, up=Z);
+            draw(unitbox, black);
+            draw(extrude((1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle, (14/18, 14/18, 14/18)), gray+opacity(.5));
+            draw(surface((1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((17/18, 17/18, 14/18) -- (1, 5/6, 5/6) -- (17/18, 14/18, 17/18) -- (5/6, 5/6, 1) -- (14/18, 17/18, 17/18) -- (5/6, 1, 5/6) -- cycle), gray+opacity(.5));
+        \end{asy}
+    \end{figure}\noindent
+    Второе~--- это призма с высотой $\frac{7\sqrt3}9$ и правильным шестиугольником в основании. Сторона основания равна $\frac{\sqrt6}{18}$, следовательно площадь основания~--- $\frac{\sqrt3}{36}$, а значит объём призмы равен $\frac7{108}$.\\
+    Чтобы посчитать объём первого кусочка, взглянем на него поближе (внешний куб имеет сторону $\frac16$):
+    \begin{figure}[H]
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(1.4, -1.6, 2, up=Z);
+            draw(scale3(1/6) * unitbox);
+
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+        \end{asy}
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(-2, 2.1, .9, up=Z);
+            draw(scale3(1/6) * unitbox);
+
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+        \end{asy}
+    \end{figure}\noindent
+    Я хочу сказать, что объём такой штуки равна объёму куба. Для этого заметим, что объём всего, что вылезает из куба, равен объёму того, чего до куба не хватает. Чтобы это показать, давайте возьмём тетраэдр, который вылезает из куба <<сверху>> т.е. со стороны оси $OZ$ и применим к нему последовательно следующие преобразования:
+    \begin{enumerate}
+        \item Параллельный перенос на вектор $\left(\begin{matrix}\frac1/9\\\frac19\\-\frac1{18}\end{matrix}\right)$.
+        \item Отражение относительно прямой $x=y=z$.
+        \item Отражение относительно плоскости $x+y+z=\frac5{12}$.
+    \end{enumerate}
+    \begin{figure}[H]
+        \begin{asy}
+            size(4cm);
+            currentprojection = perspective(-2, 2.1, .9, up=Z);
+            draw(scale3(1/6) * unitbox, black);
+
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            
+            draw(surface((0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+            draw(surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(surface((0, 1/6, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+        \end{asy}
+        \begin{asy}
+            size(4cm);
+            currentprojection = perspective(-2, 2.1, .9, up=Z);
+            draw(scale3(1/6) * unitbox, black);
+
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            
+            draw(surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            
+            draw(surface((0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+
+            transform3 shi = shift(1/9, 1/9, -1/18);
+            transform3 rot = rotate(180, (1, 1, 1));
+            transform3 ref = reflect((5/36, 5/36, 5/36), (5/12, 0, 0), (0, 5/12, 0));
+            transform3 transf = shi;
+
+            draw(transf * surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 1/6, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+        \end{asy}
+        \begin{asy}
+            size(4cm);
+            currentprojection = perspective(-2, 2.1, .9, up=Z);
+            draw(scale3(1/6) * unitbox, black);
+
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+
+            transform3 shi = shift(1/9, 1/9, -1/18);
+            transform3 rot = rotate(180, (1, 1, 1));
+            transform3 ref = reflect((5/36, 5/36, 5/36), (5/12, 0, 0), (0, 5/12, 0));
+            transform3 transf = rot * shi;
+
+            draw(transf * surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 1/6, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+        \end{asy}
+    \end{figure}
+    \begin{figure}[H]
+        \begin{asy}
+            size(5cm);
+            currentprojection = perspective(-2, 2.1, .9, up=Z);
+            draw(scale3(1/6) * unitbox, black);
+
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+
+            transform3 shi = shift(1/9, 1/9, -1/18);
+            transform3 rot = rotate(180, (1, 1, 1));
+            transform3 ref = reflect((5/36, 5/36, 5/36), (5/12, 0, 0), (0, 5/12, 0));
+            transform3 transf = ref * rot * shi;
+
+            draw(transf * surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 1/6, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+        \end{asy}
+        \begin{asy}
+            size(4cm);
+            currentprojection = perspective(1.5, 1.5, 1, up=Z);
+            draw(scale3(1/6) * unitbox, black);
+
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 1/6, 0) -- (1/18, 4/18, 1/18) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), gray+opacity(.5));
+
+            draw(surface((0, 1/6, 1/6) -- (1/18, 4/18, 1/18) -- (1/6, 1/6, 0) -- (4/18, 1/18, 1/18) -- (1/6, 0, 1/6) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((1/6, 0, 0) -- (0, 0, 1/6) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+            draw(surface((0, 0, 1/6) -- (0, 1/6, 0) -- (0, 0, 0) -- cycle), gray+opacity(.5));
+
+            transform3 shi = shift(1/9, 1/9, -1/18);
+            transform3 rot = rotate(180, (1, 1, 1));
+            transform3 ref = reflect((5/36, 5/36, 5/36), (5/12, 0, 0), (0, 5/12, 0));
+            transform3 transf = ref * rot * shi;
+
+            draw(transf * surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 0, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 0, 1/6) -- (1/6, 0, 1/6) -- (0, 1/6, 1/6) -- cycle), orange+opacity(.8));
+            draw(transf * surface((0, 1/6, 1/6) -- (1/18, 1/18, 4/18) -- (1/6, 0, 1/6) -- cycle), orange+opacity(.8));
+        \end{asy}
+    \end{figure}
+    Сделав так ещё дважды (с двумя другими тетраэдрами), получим куб со стороной $\frac16$.\\
+    Итого объём пересечения всех трёх фигур даст нам $\frac{7}{106}+\frac1{216}=\frac2{27}$.
+    \subparagraph{Итоговый объём.}
+    $$
+    3\cdot\frac{11}{36}-3\cdot\frac{31}{324}+\frac2{27}=\frac{19}{27}
+    $$
+    Ответ: $\frac{19}{27}$.
+    \end{comment}
     \section{Задача 2.}
     \paragraph{Условие.}
     Случайная точка $A$ имеет равномерное распределение в правильном $n$-угольнике. Найти вероятность $P_n$, что точка $A$ находится ближе к границе многоугольника, чем к его диагоналям. Найти числа $C$, $\alpha$, что
@@ -297,4 +1008,199 @@
         \end{tabular}
     \end{figure}\noindent
     Разумеется, для $n=10$ результаты сходятся с оценкой довольно плохо т.к. она нормально работает только при больших $n$.
+    \paragraph{Симуляция.}
+    Для симуляции этого процесса мной был написан следующий код на языке C++ стандарта 20:
+    \begin{verbatim}
+#include <algorithm>
+#include <array>
+#include <cmath>
+#include <concepts>
+#include <format>
+#include <iostream>
+#include <mutex>
+#include <random>
+#include <thread>
+#include <vector>
+
+template <class T>
+concept copy_constructible =
+    std::constructible_from<T, T&> && std::convertible_to<T&, T>
+    && std::constructible_from<T, const T&> && std::convertible_to<const T&, T>
+    && std::constructible_from<T, const T> && std::convertible_to<const T, T>;
+
+template <class T>
+concept copy_assignable =
+    std::assignable_from<T&, T&> && std::assignable_from<T&, const T&>
+    && std::assignable_from<T&, const T>;
+
+template <class P, class D>
+concept distribution_param_type =
+    copy_constructible<typename D::param_type> && copy_assignable<typename D::param_type>
+    && std::equality_comparable<P>
+    && requires {
+           typename P::distribution_type;
+           requires std::same_as<typename P::distribution_type, D>;
+       };
+
+template <class D>
+concept random_number_distribution =
+    copy_constructible<D> && copy_assignable<D> && std::equality_comparable<D>
+    && requires(
+            D d,
+            const D x,
+            typename D::param_type p,
+            std::ranlux24 g,
+            std::basic_istream<char> is,
+            std::basic_ostream<char> os) {
+           typename D::result_type;
+           requires std::integral<typename D::result_type>
+                   || std::floating_point<typename D::result_type>;
+           typename D::param_type;
+           requires distribution_param_type<typename D::param_type, D>;
+           D();
+           D(p);
+           {
+               d.reset()
+           } -> std::same_as<void>;
+           {
+               x.param()
+           } -> std::same_as<typename D::param_type>;
+           {
+               d.param(p)
+           } -> std::same_as<void>;
+           {
+               d(g)
+           } -> std::same_as<typename D::result_type>;
+           {
+               d(g, p)
+           } -> std::same_as<typename D::result_type>;
+           {
+               x.min()
+           } -> std::same_as<typename D::result_type>;
+           {
+               x.max()
+           } -> std::same_as<typename D::result_type>;
+           {
+               os << d
+           } -> std::same_as<decltype(os)&>;
+           {
+               is >> d
+           } -> std::same_as<decltype(is)&>;
+       };
+
+static_assert(random_number_distribution<std::binomial_distribution<std::size_t>>);
+
+template <std::totally_ordered value_type>
+class in_range
+{
+private:
+    value_type from, to;
+    
+public:
+    in_range(const value_type& from, const value_type& to) : from(from), to(to) {}
+    
+    bool operator()(const value_type& value) const
+    {
+        return from <= value && value < to;
+    }
+};
+
+template <random_number_distribution distribution,
+          std::predicate<typename distribution::result_type> predicate>
+std::uint64_t variable_in_range(
+        std::uniform_random_bit_generator auto& gen,
+        distribution& distr,
+        const predicate& p,
+        std::uint64_t series)
+{
+    std::uint64_t count = 0;
+    while (series-- > 0)
+    {
+        if (p(distr(gen)))
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+int main()
+{
+    std::cout.precision(20);
+    
+    std::array<std::uint64_t, 4> ns = {
+        {10, 100, 1'000, 10'000}
+    };
+    std::array<double, 5> ps = {
+        {0.001, 0.01, 0.1, 0.25, 0.5}
+    };
+    
+    std::vector<std::thread> threads;
+    std::mutex in_lock;
+    
+    for (std::size_t i = 0; i < ns.size(); i++)
+    {
+        std::uint64_t n = ns[i];
+        for (std::size_t j = 0; j < ps.size(); j++)
+        {
+            double p = ps[j];
+            
+            threads.emplace_back(
+            [i, j, n, p, &in_lock]() -> void
+            {
+                std::mt19937_64 engine;
+                std::uint64_t series = 1'000'000'000;
+                std::uint64_t lower_bound =
+                static_cast<std::uint64_t>(std::ceil(n / 2.0L - std::sqrt(n * p * (1.0L - p))));
+                std::uint64_t upper_bound =
+                static_cast<std::uint64_t>(std::ceil(n / 2.0L + std::sqrt(n * p * (1.0L - p))));
+                std::binomial_distribution distr(n, p);
+                std::uint64_t positive =
+                        variable_in_range(engine, distr, in_range(lower_bound, upper_bound), series);
+                
+                std::unique_lock lck(in_lock);
+                std::format_to(
+                        std::ostream_iterator<char>(std::cout),
+                        "{:>6} {:>6.3}:    {:>10}/{:<10}\n",
+                        n,
+                        p,
+                        positive,
+                        series);
+                std::cout << std::flush;
+            });
+        }
+    }
+    
+    for (std::thread& thread : threads)
+    {
+        thread.join();
+    }
+    return 0;
+}
+    \end{verbatim}
+    Он запускает биномиальное распределение с параметрами $n$ и $p$ несколько (миллион) раз, и проверяет, сколько раз значение лежало в диапазоне $\left[\frac n2-\sqrt{npq};\frac n2+\sqrt{npq}\right]$ (точнее, $\left[\left\lceil\frac n2-\sqrt{npq}\right\rceil;\left\lceil\frac n2+\sqrt{npq}\right\rceil\right)$, что для целых чисел то же самое). Делается всё это в несколько потоков.\\
+    Результатом данной программы является следующее:
+    \begin{verbatim}
+           100  0.001:             0/1000000000
+            10   0.01:            22/1000000000
+            10  0.001:             0/1000000000
+            10    0.5:     656231930/1000000000
+            10    0.1:       1486671/1000000000
+            10   0.25:     220634338/1000000000
+          1000  0.001:             0/1000000000
+           100   0.01:             0/1000000000
+          1000   0.01:             0/1000000000
+           100    0.1:             0/1000000000
+           100    0.5:     680280034/1000000000
+         10000  0.001:             0/1000000000
+         10000   0.01:             0/1000000000
+          1000    0.1:             0/1000000000
+         10000   0.25:             0/1000000000
+          1000    0.5:     673057269/1000000000
+          1000   0.25:             0/1000000000
+           100   0.25:          4278/1000000000
+         10000    0.1:             0/1000000000
+         10000    0.5:     682658421/1000000000
+    \end{verbatim}
+    Почему, например, при $n=1000$, $p=0.25$ количество позитивных результатов равен нулю? Вероятно, потому что не повезло.
 \end{document}
